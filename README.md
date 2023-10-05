@@ -1,5 +1,5 @@
 # Playwright_Cucumber
-Playwright POM with Cucumber
+Playwright TS POM with Cucumber
 
 Based on an excellent Playwright TS Cucumber course on YouTube by Koushik Chatterjee to get started with Playwright BDD, having worked with SpecFlow previously.
 

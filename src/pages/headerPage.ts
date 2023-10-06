@@ -1,13 +1,17 @@
-import { expect, Page } from '@playwright/test';
-import PlaywrightWrapper from '../utils/PlaywrightWrappers';
+import { Config, Page, expect } from '@playwright/test';
+import * as config from '../config.json';
+
+const selectedUrl = config.firstUrl;
 
 export default class HeaderPage {
-  private base: PlaywrightWrapper;
-  constructor(private page: Page) {
-    this.base = new PlaywrightWrapper(page);
+  private page: Page;
+
+  constructor(page: Page) {
+    this.page = page;
   }
 
   private headerPageElements = {
+    pageTitle: 'head > title',
     searchInput: 'Search books or authors',
     cartBtn: 'button.mat-focus-indicator.mat-icon-button',
     cartValue: '#mat-badge-content-0',
@@ -18,15 +22,19 @@ export default class HeaderPage {
     logoutLink: "//button[text()='Logout' and @role='menuitem']",
   };
 
+  async navigateToHeaderPage() {
+    await this.page.goto(selectedUrl);
+  }
+
   async enterBookName(bookname: string) {
     await this.page
-      .getByPlaceholder(this.headerPageElements.searchInput)
-      .type(bookname);
-    await this.base.waitAndClick("mat-option[role='option']");
+      .locator(`[placeholder="${this.headerPageElements.searchInput}"]`)
+      .fill(bookname);
+    await this.page.locator("mat-option[role='option']").click();
   }
 
   async clickOnCart() {
-    await this.page.click(this.headerPageElements.cartBtn);
+    await this.page.locator(this.headerPageElements.cartBtn).click();
   }
 
   async getCartValue() {
@@ -35,21 +43,21 @@ export default class HeaderPage {
   }
 
   async clickLoginLink() {
-    await this.base.navigateTo(this.headerPageElements.loginLink);
+    await this.page.locator(this.headerPageElements.loginLink).click();
   }
 
   async clickOnUserMenu() {
-    await this.base.waitAndClick(this.headerPageElements.userMenu);
+    await this.page.locator(this.headerPageElements.userMenu).click();
   }
 
   async clickOnMyOrder() {
     await this.clickOnUserMenu();
-    await this.base.waitAndClick(this.headerPageElements.myOrder);
+    await this.page.locator(this.headerPageElements.myOrder).click();
   }
 
   async logoutUser() {
     await this.clickOnUserMenu();
-    await this.base.navigateTo(this.headerPageElements.logoutLink);
+    await this.page.locator(this.headerPageElements.logoutLink).click();
   }
 
   async verifyLoginSuccess() {

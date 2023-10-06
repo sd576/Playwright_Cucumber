@@ -1,6 +1,6 @@
 import { BeforeAll, AfterAll, Before, After, Status } from '@cucumber/cucumber';
 import { chromium, Browser, Page, BrowserContext } from '@playwright/test';
-import { pageFixture } from '../hooks/pageFixture';
+import { fixture } from '../hooks/pageFixture';
 
 let browser: Browser;
 let context: BrowserContext;
@@ -12,19 +12,19 @@ BeforeAll(async function () {
 Before(async function () {
   context = await browser.newContext();
   const page = await browser.newPage();
-  pageFixture.page = page;
+  fixture.page = page;
 });
 
 After(async function ({ pickle, result }) {
   console.log(result?.status);
   // screenshot
   if (result?.status == Status.FAILED) {
-    const img = await pageFixture.page.screenshot({
+    const img = await fixture.page.screenshot({
       path: `./test-result/screenshots/${pickle.name}.png`,
     });
     await this.attach(img, 'image/png');
   }
-  await pageFixture.page.close();
+  await fixture.page.close();
   await context.close();
 });
 

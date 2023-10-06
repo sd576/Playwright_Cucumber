@@ -10,6 +10,8 @@
           "accent-color"
         ]
       }
-    ]
+    ],
+    "create-element-svg": "off",
+    "meta-charset-utf-8": "off"
   }
 }
